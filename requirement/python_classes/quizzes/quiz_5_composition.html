@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz 5: Composition & Design</title>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+       background:#ffffff;color:#1e293b;padding:22px;line-height:1.5}
+  .card{max-width:760px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.08);border-radius:14px;padding:24px}
+  h1{font-size:20px;margin:0 0 2px}
+  .sub{color:#64748b;font-size:13px;margin:0 0 18px}
+  .q{margin:18px 0;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+  .q p.stem{font-weight:600;margin:0 0 10px}
+  code{background:#f1f5f9;border:1px solid #e2e8f0;padding:2px 6px;border-radius:6px;font-size:13px;color:#be123c}
+  pre{background:#f1f5f9;color:#0f172a;padding:12px;border-radius:8px;overflow:auto;font-size:13px;border:1px solid #e2e8f0}
+  label{display:block;padding:8px 10px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid transparent}
+  label:hover{background:#f1f5f9}
+  input{margin-right:8px}
+  .fb{margin-top:10px;font-size:13.5px;display:none;padding:8px 10px;border-radius:8px}
+  .fb.ok{background:rgba(16,185,129,.15);color:#047857;display:block}
+  .fb.no{background:rgba(239,68,68,.15);color:#b91c1c;display:block}
+  label.correct{background:rgba(16,185,129,.18);border-color:#10b981}
+  label.wrong{background:rgba(239,68,68,.15);border-color:#ef4444}
+  button{margin-top:18px;background:#3b82f6;color:#fff;border:none;padding:11px 20px;border-radius:9px;
+         font-size:15px;font-weight:600;cursor:pointer}
+  button:hover{background:#2563eb}
+  #score{margin-top:16px;font-size:16px;font-weight:700;display:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Quiz 5: Composition, Modularity & Design</h1>
+  <p class="sub">Section 5 check (final). Pick one answer per question, then press <b>Check answers</b>.</p>
+  <div id="quiz"></div>
+  <button onclick="check()">Check answers</button>
+  <div id="score"></div>
+</div>
+<script>
+const QUESTIONS = [
+  {stem:"The Zoo holds a list of animals and a list of people. This relationship is called...",
+   opts:["Inheritance (is-a)","Composition (has-a)","Overriding","Encapsulation only"],
+   correct:1,
+   exp:"A Zoo <i>has</i> animals and people, it does not inherit from them. That's composition."},
+  {stem:"Why is Zoo NOT written as <code>class Zoo(Animal)</code>?",
+   opts:["Because a Zoo is not a kind of Animal, it contains animals",
+         "Because Python does not allow it",
+         "Because Animal is too small",
+         "It actually should inherit from Animal"],
+   correct:0,
+   exp:"Use inheritance only for is-a. A Zoo is not an animal, so it contains them instead."},
+  {stem:"<b>Separation of responsibilities</b> in this design means...",
+   opts:["Every class lives in its own file",
+         "Each class has one clear job: Animal models an animal, Zoo manages the collection, Zookeeper cares for animals",
+         "Only one person can edit the code",
+         "Methods never call other methods"],
+   correct:1,
+   exp:"Each class owns a single, well-defined responsibility, easier to understand and change."},
+  {stem:"Zoo.feed_all() loops over self.animals and calls eat() on each. The benefit of <b>modularity</b> here is...",
+   opts:["Zoo reuses the animals' own behavior instead of re-implementing it",
+         "It makes the file shorter only","It avoids using self","It removes inheritance"],
+   correct:0,
+   exp:"Modular pieces (Animal.eat) are reused by other parts (Zoo), change one place, everything benefits."},
+  {stem:"A Zookeeper feeds an Animal via <code>keeper.feed(animal)</code>. This shows objects...",
+   opts:["are completely independent and never interact",
+         "can collaborate: one object uses another object's methods",
+         "must all inherit from one class","cannot hold other objects"],
+   correct:1,
+   exp:"Objects collaborate by calling each other's methods, the heart of object-oriented design."},
+];
+const quiz=document.getElementById('quiz');
+QUESTIONS.forEach((q,i)=>{
+  const div=document.createElement('div');div.className='q';
+  div.innerHTML=`<p class="stem">${i+1}. ${q.stem}</p>`+
+    q.opts.map((o,j)=>`<label data-q="${i}" data-o="${j}"><input type="radio" name="q${i}" value="${j}">${o}</label>`).join('')+
+    `<div class="fb" id="fb${i}"></div>`;
+  quiz.appendChild(div);
+});
+function check(){
+  let s=0;
+  QUESTIONS.forEach((q,i)=>{
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    const fb=document.getElementById('fb'+i);
+    document.querySelectorAll(`label[data-q="${i}"]`).forEach(l=>l.classList.remove('correct','wrong'));
+    document.querySelector(`label[data-q="${i}"][data-o="${q.correct}"]`).classList.add('correct');
+    if(sel && +sel.value===q.correct){s++;fb.className='fb ok';fb.innerHTML='Correct. '+q.exp;}
+    else{fb.className='fb no';fb.innerHTML=''+q.exp;
+      if(sel)document.querySelector(`label[data-q="${i}"][data-o="${sel.value}"]`).classList.add('wrong');}
+  });
+  const sc=document.getElementById('score');sc.style.display='block';
+  sc.textContent=`Score: ${s} / ${QUESTIONS.length}`;
+  sc.style.color = s===QUESTIONS.length?'#047857':'#b45309';
+}
+</script>
+</body>
+</html>

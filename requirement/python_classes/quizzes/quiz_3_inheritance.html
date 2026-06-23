@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz 3: Inheritance</title>
+<style>
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+       background:#ffffff;color:#1e293b;padding:22px;line-height:1.5}
+  .card{max-width:760px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.08);border-radius:14px;padding:24px}
+  h1{font-size:20px;margin:0 0 2px}
+  .sub{color:#64748b;font-size:13px;margin:0 0 18px}
+  .q{margin:18px 0;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+  .q p.stem{font-weight:600;margin:0 0 10px}
+  code{background:#f1f5f9;border:1px solid #e2e8f0;padding:2px 6px;border-radius:6px;font-size:13px;color:#be123c}
+  pre{background:#f1f5f9;color:#0f172a;padding:12px;border-radius:8px;overflow:auto;font-size:13px;border:1px solid #e2e8f0}
+  label{display:block;padding:8px 10px;margin:6px 0;border-radius:8px;cursor:pointer;border:1px solid transparent}
+  label:hover{background:#f1f5f9}
+  input{margin-right:8px}
+  .fb{margin-top:10px;font-size:13.5px;display:none;padding:8px 10px;border-radius:8px}
+  .fb.ok{background:rgba(16,185,129,.15);color:#047857;display:block}
+  .fb.no{background:rgba(239,68,68,.15);color:#b91c1c;display:block}
+  label.correct{background:rgba(16,185,129,.18);border-color:#10b981}
+  label.wrong{background:rgba(239,68,68,.15);border-color:#ef4444}
+  button{margin-top:18px;background:#3b82f6;color:#fff;border:none;padding:11px 20px;border-radius:9px;
+         font-size:15px;font-weight:600;cursor:pointer}
+  button:hover{background:#2563eb}
+  #score{margin-top:16px;font-size:16px;font-weight:700;display:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Quiz 3: Inheritance (parent & child classes)</h1>
+  <p class="sub">Section 3 check. Pick one answer per question, then press <b>Check answers</b>.</p>
+  <div id="quiz"></div>
+  <button onclick="check()">Check answers</button>
+  <div id="score"></div>
+</div>
+<script>
+const QUESTIONS = [
+  {stem:"In <code>class Dog(Animal):</code>, what is the relationship?",
+   opts:["Animal inherits from Dog","Dog is the parent of Animal",
+         "Dog is a child class that inherits from the parent class Animal",
+         "Dog and Animal are unrelated"],
+   correct:2,
+   exp:"<code>Dog(Animal)</code> means Dog inherits from Animal: Dog is the child, Animal the parent."},
+  {stem:"Why use inheritance instead of rewriting <code>name</code>, <code>age</code>, <code>eat()</code> in every animal?",
+   opts:["To avoid repeating shared code, define it once in Animal and reuse it",
+         "Because Python forbids defining attributes twice",
+         "It makes the program run faster",
+         "There is no good reason; it is optional styling"],
+   correct:0,
+   exp:"Inheritance lets child classes reuse common state/behavior, less duplication, easier to maintain."},
+  {stem:"What does <code>super().__init__(name, age)</code> do inside <code>Zebra.__init__</code>?",
+   opts:["Creates a brand new Animal object","Calls the parent's __init__ to set up the inherited attributes",
+         "Deletes the parent class","Renames the Zebra class"],
+   correct:1,
+   exp:"<code>super().__init__(...)</code> runs the parent's setup so you don't re-write name/age yourself."},
+  {stem:"If <code>Cat</code> does NOT define <code>eat()</code> but Animal does, what happens when you call <code>my_cat.eat()</code>?",
+   opts:["An error: Cat has no eat method","Python uses the inherited eat() from Animal",
+         "Nothing happens","It creates a new method automatically"],
+   correct:1,
+   exp:"Missing methods are looked up in the parent class, Cat inherits Animal's <code>eat()</code>."},
+  {stem:"Which statement is true?",
+   opts:["A Zebra is-an Animal (inheritance)","A Zebra has-an Animal (composition)",
+         "An Animal is-a Zebra","A Zebra is-a Zoo"],
+   correct:0,
+   exp:"Inheritance models an <b>is-a</b> relationship: a Zebra <i>is an</i> Animal."},
+];
+const quiz=document.getElementById('quiz');
+QUESTIONS.forEach((q,i)=>{
+  const div=document.createElement('div');div.className='q';
+  div.innerHTML=`<p class="stem">${i+1}. ${q.stem}</p>`+
+    q.opts.map((o,j)=>`<label data-q="${i}" data-o="${j}"><input type="radio" name="q${i}" value="${j}">${o}</label>`).join('')+
+    `<div class="fb" id="fb${i}"></div>`;
+  quiz.appendChild(div);
+});
+function check(){
+  let s=0;
+  QUESTIONS.forEach((q,i)=>{
+    const sel=document.querySelector(`input[name="q${i}"]:checked`);
+    const fb=document.getElementById('fb'+i);
+    document.querySelectorAll(`label[data-q="${i}"]`).forEach(l=>l.classList.remove('correct','wrong'));
+    document.querySelector(`label[data-q="${i}"][data-o="${q.correct}"]`).classList.add('correct');
+    if(sel && +sel.value===q.correct){s++;fb.className='fb ok';fb.innerHTML='Correct. '+q.exp;}
+    else{fb.className='fb no';fb.innerHTML=''+q.exp;
+      if(sel)document.querySelector(`label[data-q="${i}"][data-o="${sel.value}"]`).classList.add('wrong');}
+  });
+  const sc=document.getElementById('score');sc.style.display='block';
+  sc.textContent=`Score: ${s} / ${QUESTIONS.length}`;
+  sc.style.color = s===QUESTIONS.length?'#047857':'#b45309';
+}
+</script>
+</body>
+</html>

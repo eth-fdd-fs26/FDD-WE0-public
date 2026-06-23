@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoo OOP: Interactive Concept Map</title>
+<style>
+  :root{
+    --bg:#ffffff; --panel:#f8fafc; --ink:#1e293b; --muted:#64748b;
+    --animal:#3b82f6; --person:#10b981; --zoo:#f59e0b; --line:#cbd5e1;
+    --accent:#0f172a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); padding:24px;
+  }
+  h1{font-size:22px; margin:0 0 4px}
+  p.sub{color:var(--muted); margin:0 0 20px; font-size:14px}
+  .layout{display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start}
+  .map{flex:1 1 520px; min-width:340px; background:var(--panel); border:1px solid #e2e8f0; border-radius:14px; padding:20px; overflow:auto}
+  .panel{flex:1 1 300px; min-width:280px; background:var(--panel); border:1px solid #e2e8f0; border-radius:14px; padding:20px; min-height:260px}
+  /* tree */
+  ul.tree{list-style:none; margin:0; padding-left:0}
+  ul.tree ul{list-style:none; margin:0; padding-left:28px; position:relative}
+  ul.tree ul::before{content:""; position:absolute; top:0; bottom:14px; left:10px; border-left:2px solid var(--line)}
+  ul.tree li{position:relative; padding:6px 0 6px 0}
+  ul.tree ul li::before{content:""; position:absolute; top:20px; left:-18px; width:18px; border-top:2px solid var(--line)}
+  .node{
+    display:inline-block; cursor:pointer; border:none; border-radius:10px;
+    padding:8px 14px; font-size:14px; font-weight:600; color:#0b1220;
+    transition:transform .08s ease, box-shadow .15s ease; user-select:none;
+  }
+  .node:hover{transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .node.zoo{background:var(--zoo)}
+  .node.animal{background:var(--animal); color:#fff}
+  .node.person{background:var(--person)}
+  .node.active{outline:3px solid var(--accent); outline-offset:2px}
+  .legend{margin-top:18px; font-size:13px; color:var(--muted); display:flex; gap:16px; flex-wrap:wrap}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .dot{width:12px; height:12px; border-radius:3px; display:inline-block}
+  /* detail panel */
+  .panel h2{margin:0 0 6px; font-size:18px}
+  .tag{display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:.5px;
+       padding:2px 8px; border-radius:999px; margin-bottom:12px}
+  .tag.zoo{background:rgba(245,158,11,.2); color:var(--zoo)}
+  .tag.animal{background:rgba(59,130,246,.2); color:#93c5fd}
+  .tag.person{background:rgba(16,185,129,.2); color:#6ee7b7}
+  .panel p{font-size:14px; line-height:1.55}
+  .kv{margin:10px 0}
+  .kv b{color:var(--accent)}
+  code{background:#f1f5f9; border:1px solid #e2e8f0; padding:2px 6px; border-radius:6px; font-size:13px; color:#be123c}
+  pre{background:#f1f5f9; color:#0f172a; border:1px solid #e2e8f0; padding:12px; border-radius:10px; overflow:auto; font-size:12.5px; line-height:1.5}
+  .hint{color:var(--muted); font-size:13px}
+</style>
+</head>
+<body>
+  <h1>The Zoo: Object-Oriented Programming Concept Map</h1>
+  <p class="sub">Click any class to see what it <b>is</b>, what it <b>knows</b> (attributes) and what it <b>can do</b> (methods).</p>
+
+  <div class="layout">
+    <div class="map">
+      <ul class="tree">
+        <li>
+          <button class="node zoo" data-key="Zoo">Zoo</button>
+          <ul>
+            <li>
+              <button class="node animal" data-key="Animal">Animal</button>
+              <ul>
+                <li><button class="node animal" data-key="Cat">Cat</button></li>
+                <li><button class="node animal" data-key="Dog">Dog</button></li>
+                <li><button class="node animal" data-key="Zebra">Zebra</button></li>
+              </ul>
+            </li>
+            <li>
+              <button class="node person" data-key="Person">Person</button>
+              <ul>
+                <li><button class="node person" data-key="Visitor">Visitor</button></li>
+                <li><button class="node person" data-key="Zookeeper">Zookeeper</button></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--zoo)"></i> Container (composition)</span>
+        <span><i class="dot" style="background:var(--animal)"></i> Animal hierarchy</span>
+        <span><i class="dot" style="background:var(--person)"></i> Person hierarchy</span>
+      </div>
+    </div>
+
+    <div class="panel" id="detail">
+      <h2>Start here</h2>
+      <p class="hint">Select a class on the left. Notice how <b>Cat</b>, <b>Dog</b> and <b>Zebra</b>
+      all branch out of <b>Animal</b>, that arrow means <b>inheritance</b>.
+      The <b>Zoo</b> at the top <i>contains</i> animals and people, that is <b>composition</b>.</p>
+    </div>
+  </div>
+
+<script>
+const DATA = {
+  Zoo:{cls:"zoo", rel:"Container class", desc:"The Zoo does not <i>inherit</i> from anything, instead it <b>contains</b> a list of animals and a list of people. This relationship is called <b>composition</b>: a Zoo <i>has</i> animals (not <i>is</i> an animal).",
+    attrs:["name","animals (list)","people (list)"],
+    methods:["add_animal(animal)","add_person(person)","feed_all()","nighttime()"],
+    code:`class Zoo:\n    def __init__(self, name):\n        self.name = name\n        self.animals = []\n        self.people  = []`},
+  Animal:{cls:"animal", rel:"Parent class (base class)", desc:"The general blueprint shared by every animal. It defines the <b>state</b> (attributes) and <b>behavior</b> (methods) that all animals have in common.",
+    attrs:["name","age","hunger","energy"],
+    methods:["eat()","sleep()","make_sound()"],
+    code:`class Animal:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n        self.hunger = 5\n        self.energy = 5\n\n    def make_sound(self):\n        return "..."`},
+  Cat:{cls:"animal", rel:"Child class → inherits from Animal", desc:"A Cat <b>is-an</b> Animal. It reuses everything from Animal and <b>overrides</b> <code>make_sound()</code> to do its own thing.",
+    attrs:["(inherited) name, age, hunger, energy"],
+    methods:["make_sound() → 'Meow' (overridden)"],
+    code:`class Cat(Animal):\n    def make_sound(self):\n        return "Meow"`},
+  Dog:{cls:"animal", rel:"Child class → inherits from Animal", desc:"A Dog <b>is-an</b> Animal. Same idea as Cat: reuse Animal, override the sound.",
+    attrs:["(inherited) name, age, hunger, energy"],
+    methods:["make_sound() → 'Woof' (overridden)"],
+    code:`class Dog(Animal):\n    def make_sound(self):\n        return "Woof"`},
+  Zebra:{cls:"animal", rel:"Child class → inherits from Animal", desc:"A Zebra <b>is-an</b> Animal. It can also add brand-new attributes (e.g. number of stripes) on top of what it inherits.",
+    attrs:["(inherited) name, age, hunger, energy","stripes (new)"],
+    methods:["make_sound() → 'Neigh' (overridden)"],
+    code:`class Zebra(Animal):\n    def __init__(self, name, age, stripes):\n        super().__init__(name, age)\n        self.stripes = stripes\n\n    def make_sound(self):\n        return "Neigh"`},
+  Person:{cls:"person", rel:"Parent class (base class)", desc:"A second, independent hierarchy. People also have state and behavior, but they are <b>not</b> animals, separate responsibilities.",
+    attrs:["name","age"],
+    methods:["greet()"],
+    code:`class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age`},
+  Visitor:{cls:"person", rel:"Child class → inherits from Person", desc:"A Visitor <b>is-a</b> Person who comes to look at the animals.",
+    attrs:["(inherited) name, age","ticket"],
+    methods:["look_at(animal)"],
+    code:`class Visitor(Person):\n    def look_at(self, animal):\n        return f"{self.name} watches {animal.name}"`},
+  Zookeeper:{cls:"person", rel:"Child class → inherits from Person", desc:"A Zookeeper <b>is-a</b> Person who takes care of the animals, e.g. feeds them.",
+    attrs:["(inherited) name, age"],
+    methods:["feed(animal)"],
+    code:`class Zookeeper(Person):\n    def feed(self, animal):\n        animal.eat()\n        return f"{self.name} fed {animal.name}"`},
+};
+
+const detail = document.getElementById('detail');
+document.querySelectorAll('.node').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.node').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const d = DATA[btn.dataset.key];
+    detail.innerHTML = `
+      <span class="tag ${d.cls}">${d.rel}</span>
+      <h2>${btn.dataset.key}</h2>
+      <p>${d.desc}</p>
+      <div class="kv"><b>Attributes (what it knows):</b><br>${d.attrs.map(a=>'• '+a).join('<br>')}</div>
+      <div class="kv"><b>Methods (what it can do):</b><br>${d.methods.map(m=>'• '+m).join('<br>')}</div>
+      <pre><code>${d.code.replace(/</g,'&lt;')}</code></pre>`;
+  });
+});
+</script>
+</body>
+</html>
