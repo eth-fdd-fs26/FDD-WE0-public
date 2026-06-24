@@ -1,0 +1,20 @@
+[project]
+name = "nuclear-central-manager"
+version = "1.0.0"
+description = "Gamified nuclear power-plant control panel that runs the AINIT26 homework solutions."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "scikit-learn>=1.1",
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "torch>=2.1",
+    "einops>=0.7",
+    "joblib>=1.2",
+]
+
+[tool.uv]
+# This isn't an installable library — uv just manages the run-time environment.
+package = false

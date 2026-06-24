@@ -1,0 +1,53 @@
+Currently We have worked on the HW3 which is the third part of the homework.
+All of the parts of the homeworks which are notebooks, will allow the user to download a python file with some implementations of what they have done + some additional things (for example trained instances of their models if there is anything that they have to train )
+At the end, the participants will take all of these solutions files that they have outputted and will put them inside a project that will be the core project. that is the goal of this specific folder in the repo: 'workshop'
+
+So for this purpose I want you to build the core of this. It should be a react front end for the visualization, that the participants will be able to launch on their machine. the backend will be python.
+Since there are 3 parts, the part will all be specific classes and in the center of the page there will be the main "display core / engine"
+The goal of this project is to create a "funny gamified nuclear power plant management panel"
+First part will be :
+
+        Pump Failure Prediction— Data Cleaning & Fitting (Ankita):
+        The primary coolant pump is a critical point of failure. If it goes down, the core overheats. The manager has access to historical logs from the pump, but the logs are notoriously messy—sensors drop offline, inputs get duplicated, and formats vary.
+        The primary learning objective here is the data pipeline: handling missing values (NaNs), removing outliers, normalizing data, and finally fitting a robust scikit-learn model like a Random Forest or Logistic Regression to predict a "Failure" (1) or "Safe" (0) state within the next hour.
+        Synthetic Dataset Generation:
+        Dataset Size: 10,000 rows of data.
+        Failure Ratio: It sets a 5% failure rate, meaning 9,500 rows will represent healthy pump operations, and 500 rows will represent pump failures.
+        The script establishes four specific pump models (PMP-001 through PMP-004). Each pump has intrinsic properties:
+        Inspection Rating: A score from 1 to 5.
+        Base Runtime: How many hours the pump has already been operating (ranging from 1,000 to 13,000 hours).
+        Failure Weight: The probability that a failure belongs to this specific pump. Older pumps with higher runtimes (like PMP-001) are heavily weighted to fail more often than newer pumps (like PMP-004).
+         Generating Telemetry (The Core Logic): The generate_telemetry function acts as the physics engine of the script. It creates realistic-looking sensor readings using normal statistical distributions (np.random.normal).
+        For Healthy Pumps: It generates standard baseline readings for flow rate, inlet/outlet pressure, vibration, bearing temperature, motor current, and motor voltage.
+        For Failing Pumps: It simulates three distinct types of failures, altering the sensor data to match the specific physical symptoms of that failure mode:
+        Mechanical Failure (50% of failures): Triggers a significant increase in vibration amplitude and bearing temperature.
+        Hydraulic Failure (30% of failures): Causes a massive drop in flow rate and a corresponding drop in motor current (cavitation).
+        Stall Failure (20% of failures): Results in a drop in outlet pressure accompanied by a massive spike in motor current.
+
+
+The  second part will be:
+        Predicting the main bassin temperature to spot an early overheat - Loric:
+        Pytorch notebook where the participant will learn how to make an architecture he is shown / spot flaws in a current implementation:
+        Mistakes he has to spot:
+        Forward from layer 1 to layer 2 is not done.
+        Regression head was not added at the last layer as it should have been.
+        One of the module which compose the layer is wrongly implemented and misses a skip forward connection.
+        One of the layer has the size flipped - which won't let the model run without size mismatch errors.
+        Keeping the weight of the Extraction layer frozen before training.
+        Things he has to complete:
+        Missing layers that are there in the diagram with their correct sizes.
+
+
+The third part will be:
+        What has been iplemented in the HW3_clustering_waste_solution notebook.
+
+So as you can see all these three parts relate to some part of the nuclear power plant. therefore, I want this core engine and visualization to be as if they appointed to "Nuclear Central Manager", their objective is to maintain the central going without it exploding for a full day. To avoid the central exploding, the nuclear manager need to take care of the  mini-games / machine learning problems decsribed before.
+
+So in a sense this part acts like both a visualization of what htey do AND a tester to see if their solutions work.
+
+So for this purpose the central part of the visualization should be a step based visualization that performs the steps that each one of the modules was supposed to implement and therefore displays the results (example when the clustering is performed, or that different N_clusters are tested it can show this, then it shows how the waste machines are configured and finally they show the routing of the newcoming wastes as they come during the day).
+At the end, if no error have been committed and everything works well, they pass the tests and the day ends!
+If they have made some errors and some of the behavior doesn't go as intended, they then have some dashboard that recaps at which moments the power plant has exploded and why.
+
+
+I want you to first investigate and ask all of your questions, then to plan how you would implement such a thing.

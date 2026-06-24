@@ -1,0 +1,6 @@
+# Block 2 — "Can you trust this model?" dependencies
+# All are preinstalled on Google Colab; listed here for reproducibility elsewhere.
+pandas>=1.5
+numpy>=1.23
+scikit-learn>=1.1
+matplotlib>=3.5

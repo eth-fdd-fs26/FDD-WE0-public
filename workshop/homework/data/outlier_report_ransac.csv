@@ -1,0 +1,9 @@
+split,class,sensor,flagged_rows,threshold
+train,0,vibration_amplitude,77,5.842
+train,0,bearing_temperature,67,41.7
+train,0,motor_current,66,30.108
+train,0,motor_voltage,71,34.691
+val,0,vibration_amplitude,24,5.842
+val,0,bearing_temperature,30,41.7
+val,0,motor_current,28,30.108
+val,0,motor_voltage,21,34.691
